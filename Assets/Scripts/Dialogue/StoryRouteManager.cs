@@ -34,7 +34,11 @@ public class StoryRouteManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            // Only apply DontDestroyOnLoad if this is a root GameObject
+            if (transform.parent == null)
+            {
+                DontDestroyOnLoad(gameObject);
+            }
             // GUIDE: Initialize your story system here
             // InitializeValues();
         }

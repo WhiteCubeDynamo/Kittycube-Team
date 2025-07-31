@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class DialogueExample : MonoBehaviour
 {
@@ -14,14 +15,18 @@ public class DialogueExample : MonoBehaviour
     
     void Update()
     {
-        if (Input.GetKeyDown(testYamlFile))
+        var keyboard = Keyboard.current;
+        if (keyboard != null)
         {
-            TestYamlFileDialogue();
-        }
-        
-        if (Input.GetKeyDown(testResources))
-        {
-            TestResourcesDialogue();
+            if (keyboard.digit1Key.wasPressedThisFrame) // Test YAML file
+            {
+                TestYamlFileDialogue();
+            }
+            
+            if (keyboard.digit2Key.wasPressedThisFrame) // Test Resources
+            {
+                TestResourcesDialogue();
+            }
         }
     }
     
