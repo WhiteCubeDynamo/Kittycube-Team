@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UIElements;
-using UnityEngine.InputSystem;
 
 public class DialogueSystemDebugger : MonoBehaviour
 {
@@ -22,13 +21,9 @@ public class DialogueSystemDebugger : MonoBehaviour
     
     void Update()
     {
-        if (debugMode)
+        if (debugMode && Input.GetKeyDown(testKey))
         {
-            var keyboard = Keyboard.current;
-            if (keyboard != null && keyboard.tKey.wasPressedThisFrame)
-            {
-                TestDialogue();
-            }
+            TestDialogue();
         }
     }
     

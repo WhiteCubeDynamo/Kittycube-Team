@@ -17,28 +17,10 @@ public class DialogueManager : MonoBehaviour
 
     void Start()
     {
-        // Wait a frame for all components to initialize
-        StartCoroutine(InitializeUIController());
-    }
-    
-    private System.Collections.IEnumerator InitializeUIController()
-    {
-        // Wait for UI controller to initialize
-        int attempts = 0;
-        while (DialogueUIController.Instance == null && attempts < 10)
-        {
-            yield return null;
-            attempts++;
-        }
-        
         uiController = DialogueUIController.Instance;
         if (uiController == null)
         {
             Debug.LogError("DialogueUIController not found! Please add it to the scene.");
-        }
-        else
-        {
-            Debug.Log("DialogueManager: UI Controller found and connected.");
         }
     }
 

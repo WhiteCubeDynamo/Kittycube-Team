@@ -41,11 +41,7 @@ public class TriggerManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            // Only apply DontDestroyOnLoad if this is a root GameObject
-            if (transform.parent == null)
-            {
-                DontDestroyOnLoad(gameObject);
-            }
+            DontDestroyOnLoad(gameObject);
         }
         else
         {

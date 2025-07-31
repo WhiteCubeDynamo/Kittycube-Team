@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UIElements;
-using UnityEngine.InputSystem;
 using System.Collections.Generic;
 using System.Collections;
 
@@ -118,19 +117,6 @@ public class DialogueUIController : MonoBehaviour
         Debug.Log("DialogueUIController: Initialization complete.");
     }
     
-    private void Update()
-    {
-        // Handle keyboard input for dialogue continuation
-        var keyboard = Keyboard.current;
-        if (keyboard != null && keyboard.enterKey.wasPressedThisFrame)
-        {
-            if (dialogueRoot != null && dialogueRoot.style.display == DisplayStyle.Flex)
-            {
-                OnContinueClicked();
-            }
-        }
-    }
-    
     private void CheckRequiredElements()
     {
         if (dialogueRoot == null) Debug.LogError("dialogue-root element not found!");
@@ -237,43 +223,12 @@ public class DialogueUIController : MonoBehaviour
 
     public void ShowInteractionPrompt(Vector3 worldPosition, string key = "E")
     {
-        if (interactionPrompt == null || hudDocument == null)
-        {
-            Debug.LogWarning("ShowInteractionPrompt: UI elements not initialized yet.");
-            return;
-        }
-        
         interactionPrompt.style.display = DisplayStyle.Flex;
-        if (interactionKey != null)
-            interactionKey.text = key;
-        
-        // Position prompt in screen space with null checks
-        try
-        {
-            var panel = hudDocument.rootVisualElement?.panel;
-            var camera = Camera.main;
-            
-            if (panel != null && camera != null)
-            {
-                Vector2 screenPos = RuntimePanelUtils.CameraTransformWorldToPanel(panel, worldPosition, camera);
-                interactionPrompt.style.left = screenPos.x;
-                interactionPrompt.style.top = screenPos.y;
-            }
-            else
-            {
-                // Fallback: position at center of screen
-                interactionPrompt.style.left = Screen.width * 0.5f;
-                interactionPrompt.style.top = Screen.height * 0.3f;
-                Debug.LogWarning("ShowInteractionPrompt: Panel or Camera is null, using fallback positioning.");
-            }
-        }
-        catch (System.Exception e)
-        {
-            Debug.LogError($"ShowInteractionPrompt error: {e.Message}");
-            // Fallback positioning
-            interactionPrompt.style.left = Screen.width * 0.5f;
-            interactionPrompt.style.top = Screen.height * 0.3f;
-        }
+        interactionKey.text = key;
+        // Position prompt in screen space
+        Vector2 screenPos = RuntimePanelUtils.CameraTransformWorldToPanel(hudDocument.rootVisualElement.panel, worldPosition, Camera.main);
+        interactionPrompt.style.left = screenPos.x;
+        interactionPrompt.style.top = screenPos.y;
     }
 
     public void HideInteractionPrompt()
@@ -418,29 +373,12 @@ private IEnumerator TypewriterEffect(string text)
 
     private IEnumerator UpdateSpeechBubblePosition(Transform target, Vector3 offset)
     {
-        while (speechBubbleContainer != null && speechBubbleContainer.style.display == DisplayStyle.Flex)
+        while (speechBubbleContainer.style.display == DisplayStyle.Flex)
         {
-            if (target == null || hudDocument == null) break;
-            
-            try
-            {
-                Vector3 worldPos = target.position + offset;
-                var panel = hudDocument.rootVisualElement?.panel;
-                var camera = Camera.main;
-                
-                if (panel != null && camera != null)
-                {
-                    Vector2 screenPos = RuntimePanelUtils.CameraTransformWorldToPanel(panel, worldPos, camera);
-                    speechBubbleContainer.style.left = screenPos.x - speechBubbleContainer.resolvedStyle.width / 2;
-                    speechBubbleContainer.style.top = screenPos.y - speechBubbleContainer.resolvedStyle.height;
-                }
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogError($"UpdateSpeechBubblePosition error: {e.Message}");
-                break;
-            }
-            
+            Vector3 worldPos = target.position + offset;
+            Vector2 screenPos = RuntimePanelUtils.CameraTransformWorldToPanel(hudDocument.rootVisualElement.panel, worldPos, Camera.main);
+            speechBubbleContainer.style.left = screenPos.x - speechBubbleContainer.resolvedStyle.width / 2;
+            speechBubbleContainer.style.top = screenPos.y - speechBubbleContainer.resolvedStyle.height;
             yield return null;
         }
     }
