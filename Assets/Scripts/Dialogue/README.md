@@ -143,6 +143,8 @@ Your UXML should include these named elements:
 </VisualElement>
 ```
 
+**💡 Tip**: See `Examples/UI/DialogueSystemUI.uxml` for a complete, ready-to-use UXML template.
+
 ### 3. Dialogue Creation Workflow
 
 1. **Create YAML files** in `Assets/DialogueData/`
@@ -436,6 +438,16 @@ Customize UI elements in your USS stylesheet:
 3. Regenerate embedded dialogues
 4. Test all dialogue flows
 5. Update custom trigger implementations
+
+## 📂 Examples
+
+The `Examples/` folder contains:
+- **Complete UI templates** (UXML + USS)
+- **Automatic scene setup** script
+- **Step-by-step tutorials**
+- **Ready-to-use implementations**
+
+See `Examples/README_Examples.md` for details.
 
 ## 🤝 Contributing
 

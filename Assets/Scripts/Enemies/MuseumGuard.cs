@@ -13,6 +13,23 @@ namespace StealthHeist.Enemies
         private float searchTimer = 0f;
         private Vector3 investigationPoint;
         
+        /// <summary>
+        /// Safely tries to set a destination, validating the path first
+        /// </summary>
+        private bool TrySetDestination(Vector3 destination)
+        {
+            UnityEngine.AI.NavMeshPath path = new UnityEngine.AI.NavMeshPath();
+            if (agent.CalculatePath(destination, path))
+            {
+                if (path.status == UnityEngine.AI.NavMeshPathStatus.PathComplete)
+                {
+                    agent.SetDestination(destination);
+                    return true;
+                }
+            }
+            return false;
+        }
+        
         protected override void Start()
         {
             base.Start();
@@ -25,6 +42,16 @@ namespace StealthHeist.Enemies
             
             agent.speed = patrolSpeed;
             
+            // Check if agent is stuck or can't reach destination
+            if (agent.pathStatus == UnityEngine.AI.NavMeshPathStatus.PathPartial || 
+                agent.pathStatus == UnityEngine.AI.NavMeshPathStatus.PathInvalid)
+            {
+                // Skip to next patrol point if current one is unreachable
+                currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Length;
+                TrySetDestination(patrolPoints[currentPatrolIndex].position);
+                return;
+            }
+            
             if (!agent.pathPending && agent.remainingDistance < 0.5f)
             {
                 waitTimer += Time.deltaTime;
@@ -32,7 +59,7 @@ namespace StealthHeist.Enemies
                 if (waitTimer >= waitTime)
                 {
                     currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Length;
-                    agent.SetDestination(patrolPoints[currentPatrolIndex].position);
+                    TrySetDestination(patrolPoints[currentPatrolIndex].position);
                     waitTimer = 0f;
                 }
             }
@@ -48,7 +75,12 @@ namespace StealthHeist.Enemies
             
             if (Vector3.Distance(transform.position, lastKnownPlayerPosition) > 1f)
             {
-                agent.SetDestination(lastKnownPlayerPosition);
+                if (!TrySetDestination(lastKnownPlayerPosition))
+                {
+                    // Can't reach investigation point, start searching instead
+                    ChangeState(EnemyState.Searching);
+                    return;
+                }
             }
             else
             {
@@ -75,7 +107,12 @@ namespace StealthHeist.Enemies
             
             if (playerTarget != null)
             {
-                agent.SetDestination(playerTarget.Position);
+                if (!TrySetDestination(playerTarget.Position))
+                {
+                    // Can't reach player directly, start searching at last known position
+                    ChangeState(EnemyState.Searching);
+                    return;
+                }
                 lastKnownPlayerPosition = playerTarget.Position;
             }
             
@@ -94,14 +131,22 @@ namespace StealthHeist.Enemies
             // Search around the last known position
             if (!agent.pathPending && agent.remainingDistance < 1f)
             {
-                // Move to a random point around the last known position
-                Vector3 randomDirection = Random.insideUnitSphere * 5f;
-                randomDirection += lastKnownPlayerPosition;
-                randomDirection.y = transform.position.y;
-                
-                if (Physics.Raycast(randomDirection + Vector3.up * 2f, Vector3.down, 3f))
+                // Try to find a reachable random point around the last known position
+                int attempts = 0;
+                while (attempts < 5) // Limit attempts to avoid infinite loop
                 {
-                    agent.SetDestination(randomDirection);
+                    Vector3 randomDirection = Random.insideUnitSphere * 5f;
+                    randomDirection += lastKnownPlayerPosition;
+                    randomDirection.y = transform.position.y;
+                    
+                    if (Physics.Raycast(randomDirection + Vector3.up * 2f, Vector3.down, 3f))
+                    {
+                        if (TrySetDestination(randomDirection))
+                        {
+                            break; // Successfully set a reachable destination
+                        }
+                    }
+                    attempts++;
                 }
             }
             
@@ -131,7 +176,23 @@ namespace StealthHeist.Enemies
                 }
             }
             
-            agent.SetDestination(nearestPatrolPoint);
+            // Check if we can reach the nearest patrol point
+            if (!TrySetDestination(nearestPatrolPoint))
+            {
+                // If we can't reach any patrol point, just start patrolling from current position
+                currentPatrolIndex = nearestIndex;
+                ChangeState(EnemyState.Patrolling);
+                return;
+            }
+            
+            // Check if agent is stuck
+            if (agent.pathStatus == UnityEngine.AI.NavMeshPathStatus.PathPartial || 
+                agent.pathStatus == UnityEngine.AI.NavMeshPathStatus.PathInvalid)
+            {
+                currentPatrolIndex = nearestIndex;
+                ChangeState(EnemyState.Patrolling);
+                return;
+            }
             
             if (!agent.pathPending && agent.remainingDistance < 1f)
             {
