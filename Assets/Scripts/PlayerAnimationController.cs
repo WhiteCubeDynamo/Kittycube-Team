@@ -84,23 +84,23 @@ namespace StealthHeist.Player
 
         private void UpdateStateAnimations()
         {
-            if (_playerController == null) return;
-
-            // Update crouching state
-            bool isCrouching = _playerController.IsCrouching;
-            if (isCrouching != _wasCrouching)
-            {
-                _animator.SetBool(_isCrouchingHash, isCrouching);
-                _wasCrouching = isCrouching;
-            }
-
-            // Update running state
-            bool isRunning = _playerController.IsRunning;
-            if (isRunning != _wasRunning)
-            {
-                _animator.SetBool(_isRunningHash, isRunning);
-                _wasRunning = isRunning;
-            }
+            // if (_playerController == null) return;
+            //
+            // // Update crouching state
+            // bool isCrouching = _playerController._isCrouching;
+            // if (isCrouching != _wasCrouching)
+            // {
+            //     _animator.SetBool(_isCrouchingHash, isCrouching);
+            //     _wasCrouching = isCrouching;
+            // }
+            //
+            // // Update running state
+            // bool isRunning = _playerController._isRunning;
+            // if (isRunning != _wasRunning)
+            // {
+            //     _animator.SetBool(_isRunningHash, isRunning);
+            //     _wasRunning = isRunning;
+            // }
         }
 
         /// <summary>
