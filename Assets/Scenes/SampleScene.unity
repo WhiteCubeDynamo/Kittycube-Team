@@ -132,7 +132,6 @@ GameObject:
   - component: {fileID: 116859237}
   - component: {fileID: 116859236}
   - component: {fileID: 116859235}
-  - component: {fileID: 116859241}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -256,22 +255,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &116859241
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 116859234}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e741851cba3ad425c91ecf922cc6b379, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _data:
-    _json: '{"declarations":{"Kind":"Object","collection":{"$content":[{"name":"movementSpeed","value":{"$content":0.1,"$type":"System.Single"},"typeHandle":{"Identification":"System.Single,
-      mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089","$version":"A"},"$version":"A"}],"$version":"A"},"$version":"A"}}'
-    _objectReferences: []
 --- !u!1 &121216075
 GameObject:
   m_ObjectHideFlags: 0
@@ -697,7 +680,8 @@ GameObject:
   - component: {fileID: 348125879}
   - component: {fileID: 348125878}
   - component: {fileID: 348125886}
-  m_Layer: 0
+  - component: {fileID: 348125887}
+  m_Layer: 8
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -848,9 +832,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a076a104b7d76d347b8fb6d7b11985d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resetTime: 15
+  resetTime: 10
   loopCount: 0
   timeClone: {fileID: 3700007695247545099, guid: 794f0206d9714b2418d36395dda91b99, type: 3}
+  recorder: {fileID: 348125887}
+--- !u!114 &348125887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 348125877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe25adec5bee2ac4f8bded7f7dea170d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  recordedPositions: []
+  recordRate: 0.05
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0

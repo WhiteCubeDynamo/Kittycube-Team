@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class Reset_Script : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class Reset_Script : MonoBehaviour
     private Vector3 startingPosition;
     private Quaternion startingRotation;
     public GameObject timeClone;
+    public recordPlayer recorder;
 
     void Start()
     {
@@ -37,9 +39,25 @@ public class Reset_Script : MonoBehaviour
 
     void spawnClone()
     {
-        GameObject clone = Instantiate(timeClone, startingPosition, startingRotation);
+        GameObject clone = Instantiate(timeClone,  startingPosition, startingRotation);
         DontDestroyOnLoad(clone);
+
+        // clone.layer = LayerMask.NameToLayer("Clone");
+        // SetLayerRecursively(clone, LayerMask.NameToLayer("Clone"));
+
+
+        var replayScript = clone.GetComponent<timeCloneScript>();
+        replayScript.replayPositions = new List<Vector3>(recorder.recordedPositions);
+        replayScript.StartReplay();
     }
+
+    void SetLayerRecursively(GameObject obj, int layer)
+    {
+        obj.layer = layer;
+        foreach (Transform child in obj.transform)
+            SetLayerRecursively(child.gameObject, layer);
+    }
+
 }
 
 
