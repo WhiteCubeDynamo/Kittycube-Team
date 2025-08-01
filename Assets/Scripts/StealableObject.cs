@@ -10,8 +10,11 @@ namespace StealthHeist.Environment
     /// Implements both IStealable (to define its properties) and IInteractable (to be picked up).
     /// </summary>
     [RequireComponent(typeof(Collider))]
-    public class StealableObject : MonoBehaviour, IStealable, IInteractable
+    public class StealableObject : MonoBehaviour, IStealable, IInteractable, IPersistent
     {
+        [Header("Persistence")]
+        [SerializeField] private string _persistenceID;
+
         [Header("Item Properties")]
         [SerializeField] private string _itemName = "Priceless Vase";
         [SerializeField] private ArtifactType _artifactType = ArtifactType.Sculpture;
@@ -71,6 +74,23 @@ namespace StealthHeist.Environment
 
         public void OnHighlight() { /* Optional: Add a visual effect like an outline. */ }
         public void OnUnhighlight() { /* Optional: Remove the visual effect. */ }
+
+        #endregion
+
+        #region IPersistent Implementation
+
+        public string PersistenceID => _persistenceID;
+
+        public object CaptureState()
+        {
+            return IsStolen;
+        }
+
+        public void RestoreState(object state)
+        {
+            IsStolen = (bool)state;
+            gameObject.SetActive(!IsStolen);
+        }
 
         #endregion
     }

@@ -9,6 +9,15 @@ namespace StealthHeist.Enemies
         [SerializeField] private float searchDuration = 10f;
         [SerializeField] private float chaseSpeed = 6f;
         [SerializeField] private float patrolSpeed = 2f;
+        [SerializeField] private float losePlayerTime = 3f; // Time before losing player after breaking line of sight
+        
+        [Header("Audio")]
+        [SerializeField] private AudioClip chaseStartClip;
+        [SerializeField] private AudioClip searchingClip;
+        [SerializeField] private AudioClip lostPlayerClip;
+        
+        private AudioSource audioSource;
+        private float losePlayerTimer = 0f;
         
         private float searchTimer = 0f;
         private Vector3 investigationPoint;
@@ -33,7 +42,13 @@ namespace StealthHeist.Enemies
         protected override void Start()
         {
             base.Start();
+            audioSource = GetComponent<AudioSource>();
+            if (!audioSource)
+            {
+                audioSource = gameObject.AddComponent<AudioSource>();
+            }
             agent.speed = patrolSpeed;
+
         }
         
         protected override void Patrol()
@@ -101,24 +116,62 @@ namespace StealthHeist.Enemies
             }
         }
         
-        protected override void Chase()
+private void PlayAudioClip(AudioClip clip)
+{
+    if (audioSource && clip && !audioSource.isPlaying)
+    {
+        audioSource.PlayOneShot(clip);
+    }
+}
+
+protected override void Chase()
         {
             agent.speed = chaseSpeed;
             
             if (playerTarget != null)
             {
-                if (!TrySetDestination(playerTarget.Position))
+                Vector3 directionToPlayer = (playerTarget.Position - transform.position).normalized;
+                float distanceToPlayer = Vector3.Distance(transform.position, playerTarget.Position);
+                
+                // Check if we can still see the player
+                bool canSeePlayer = false;
+                if (distanceToPlayer <= viewRadius)
                 {
-                    // Can't reach player directly, start searching at last known position
-                    ChangeState(EnemyState.Searching);
-                    return;
+                    float angleToPlayer = Vector3.Angle(transform.forward, directionToPlayer);
+                    if (angleToPlayer <= viewAngle * 0.5f)
+                    {
+                        if (!Physics.Raycast(transform.position + Vector3.up, directionToPlayer, distanceToPlayer, obstacleLayer))
+                        {
+                            canSeePlayer = true;
+                            losePlayerTimer = 0f;
+                        }
+                    }
                 }
-                lastKnownPlayerPosition = playerTarget.Position;
+                
+                if (canSeePlayer)
+                {
+                    if (!TrySetDestination(playerTarget.Position))
+                    {
+                        // Can't reach player directly, start searching at last known position
+                        ChangeState(EnemyState.Searching);
+                        return;
+                    }
+                    lastKnownPlayerPosition = playerTarget.Position;
+                }
+                else
+                {
+                    // Lost sight of player, count down before searching
+                    losePlayerTimer += Time.deltaTime;
+                    if (losePlayerTimer >= losePlayerTime)
+                    {
+                        ChangeState(EnemyState.Searching);
+                        losePlayerTimer = 0f;
+                    }
+                }
             }
-            
-            // If we lose sight of the player, start searching
-            if (detectionLevel < 0.8f)
+            else
             {
+                // No player target, go to searching
                 ChangeState(EnemyState.Searching);
             }
         }
@@ -155,6 +208,37 @@ namespace StealthHeist.Enemies
                 ChangeState(EnemyState.Returning);
                 searchTimer = 0f;
             }
+        }
+        
+        protected override void ChangeState(EnemyState newState)
+        {
+            // Play audio based on state transitions
+            if (newState != currentState)
+            {
+                switch (newState)
+                {
+                    case EnemyState.Chasing:
+                        PlayAudioClip(chaseStartClip);
+                        Debug.Log("Guard: Stop right there!");
+                        break;
+                    case EnemyState.Searching:
+                        if (currentState == EnemyState.Chasing)
+                        {
+                            PlayAudioClip(searchingClip);
+                            Debug.Log("Guard: Where did they go?");
+                        }
+                        break;
+                    case EnemyState.Returning:
+                        if (currentState == EnemyState.Searching)
+                        {
+                            PlayAudioClip(lostPlayerClip);
+                            Debug.Log("Guard: Must have been nothing...");
+                        }
+                        break;
+                }
+            }
+            
+            base.ChangeState(newState);
         }
         
         protected override void ReturnToPatrol()
@@ -212,6 +296,39 @@ namespace StealthHeist.Enemies
             {
                 lastKnownPlayerPosition = alarmPosition;
                 ChangeState(EnemyState.Investigating);
+            }
+        }
+        
+        // Override to add additional debugging
+        protected override void DetectPlayer()
+        {
+            base.DetectPlayer();
+            
+            // Debug visualization in Scene view
+            if (playerTarget != null && detectionLevel > 0)
+            {
+                Debug.DrawLine(transform.position + Vector3.up, playerTarget.Position, Color.Lerp(Color.yellow, Color.red, detectionLevel));
+            }
+        }
+        
+        // Enhanced gizmo drawing for better debugging
+        protected override void OnDrawGizmosSelected()
+        {
+            base.OnDrawGizmosSelected();
+            
+            // Draw current state
+            Vector3 textPos = transform.position + Vector3.up * 3f;
+            
+            #if UNITY_EDITOR
+            UnityEditor.Handles.Label(textPos, $"State: {currentState}\nDetection: {detectionLevel:F2}");
+            #endif
+            
+            // Draw last known player position
+            if (lastKnownPlayerPosition != Vector3.zero)
+            {
+                Gizmos.color = Color.magenta;
+                Gizmos.DrawWireSphere(lastKnownPlayerPosition, 0.5f);
+                Gizmos.DrawLine(transform.position, lastKnownPlayerPosition);
             }
         }
     }

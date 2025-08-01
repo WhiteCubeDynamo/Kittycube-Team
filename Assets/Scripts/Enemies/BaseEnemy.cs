@@ -105,14 +105,11 @@ namespace StealthHeist.Enemies
                 if (angleToPlayer <= viewAngle * 0.5f)
                 {
                     // Check for line of sight
-                    if (Physics.Raycast(transform.position + Vector3.up, directionToPlayer, out RaycastHit hit, distanceToPlayer, obstacleLayer | playerLayer))
+                    if (!Physics.Raycast(transform.position + Vector3.up, directionToPlayer, distanceToPlayer, obstacleLayer))
                     {
-                        if (hit.collider.gameObject.layer == Mathf.Log(playerLayer.value, 2))
-                        {
-                            // Player is visible
-                            IncreaseDetection(playerTarget.VisibilityLevel);
-                            lastKnownPlayerPosition = playerTarget.Position;
-                        }
+                        // No obstacles blocking view, player is visible
+                        IncreaseDetection(playerTarget.VisibilityLevel);
+                        lastKnownPlayerPosition = playerTarget.Position;
                     }
                 }
             }

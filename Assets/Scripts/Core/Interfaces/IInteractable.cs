@@ -4,8 +4,8 @@ namespace StealthHeist.Core.Interfaces
 {
     public interface IInteractable
     {
-        string InteractionText { get; }
-        bool CanInteract { get; }
+        public string InteractionText { get; }
+        public bool CanInteract { get; }
         void Interact();
         void OnHighlight();
         void OnUnhighlight();

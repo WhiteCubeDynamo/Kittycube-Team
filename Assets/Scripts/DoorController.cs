@@ -8,9 +8,12 @@ namespace StealthHeist.Environment
     /// <summary>
     /// Controls the behavior of an interactable door, including opening, closing, and locking.
     /// </summary>
-    public class DoorController : MonoBehaviour, IInteractable
+    public class DoorController : MonoBehaviour, IInteractable, IPersistent
     {
         private enum DoorState { Closed, Opening, Open, Closing }
+
+        [Header("Persistence")]
+        [SerializeField] private string _persistenceID;
 
         [Header("Door Components")]
         [Tooltip("The part of the door that will rotate on its pivot.")]
@@ -134,5 +137,46 @@ namespace StealthHeist.Environment
             _doorPivot.rotation = endRotation; // Ensure it ends at the exact rotation
             _currentState = open ? DoorState.Open : DoorState.Closed;
         }
+
+        #region IPersistent Implementation
+
+        public string PersistenceID => _persistenceID;
+
+        public object CaptureState()
+        {
+            return new DoorPersistentState
+            {
+                isLocked = _isLocked,
+                doorState = _currentState
+            };
+        }
+
+        public void RestoreState(object state)
+        {
+            if (state is DoorPersistentState doorState)
+            {
+                _isLocked = doorState.isLocked;
+                _currentState = doorState.doorState;
+
+                // Update the door's visual position based on its state
+                if (_currentState == DoorState.Open)
+                {
+                    _doorPivot.rotation = _openRotation;
+                }
+                else if (_currentState == DoorState.Closed)
+                {
+                    _doorPivot.rotation = _closedRotation;
+                }
+            }
+        }
+
+        [System.Serializable]
+        private struct DoorPersistentState
+        {
+            public bool isLocked;
+            public DoorState doorState;
+        }
+
+        #endregion
     }
 }

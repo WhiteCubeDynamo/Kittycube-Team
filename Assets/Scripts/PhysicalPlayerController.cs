@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using StealthHeist.Player;
@@ -22,8 +23,12 @@ public class PhysicalPlayerController : MonoBehaviour
     
     [Header("Throwing")]
     [SerializeField] private GameObject _throwablePrefab;
-    [SerializeField] private float _throwForce = 15f;
-    [SerializeField] private float _throwCooldown = 1.0f;
+    [SerializeField] private float _throwForce = 10f;
+    [SerializeField] private float _throwCooldown = 0.5f;
+    
+    [Header("Interaction")]
+    [SerializeField] private List<string> _collectibleObjectNames = new List<string> { "Jewel", "Diamond", "Gold", "Artifact" };
+    [SerializeField] private List<string> _collectedItems = new List<string>();
     
     [Header("Physics")]
     public float gravityScale = 2f;
@@ -132,7 +137,7 @@ public class PhysicalPlayerController : MonoBehaviour
             Quaternion smoothRot = Quaternion.RotateTowards(transform.rotation, targetRot, rotationSpeed * Time.fixedDeltaTime);
             rb.MoveRotation(smoothRot);
         }
-    }
+    }   //
     
     private void UpdateAnimationParameters(Vector2 input, bool isRunning)
     {
@@ -211,11 +216,41 @@ public class PhysicalPlayerController : MonoBehaviour
 
         if (Physics.Raycast(origin, direction, out RaycastHit hit, interactRange))
         {
+            GameObject hitObject = hit.collider.gameObject;
+            
+            // Check if this object matches any of our collectible names
+            foreach (string collectibleName in _collectibleObjectNames)
+            {
+                if (hitObject.name.Contains(collectibleName))
+                {
+                    // Add to collected items list
+                    _collectedItems.Add(hitObject.name);
+                    Debug.Log($"Collected: {hitObject.name}. Total items: {_collectedItems.Count}");
+                    
+                    // Remove the object from the scene
+                    Destroy(hitObject);
+                    return;
+                }
+            }
+            
+            // If no collectible was found, still try the interface approach as fallback
             var interactable = hit.collider.GetComponent<IInteractable>();
             if (interactable != null)
             {
                 interactable.Interact();
             }
         }
+    }
+    
+    // Public method to check if player has a specific item
+    public bool HasItem(string itemName)
+    {
+        return _collectedItems.Contains(itemName);
+    }
+    
+    // Public method to get all collected items
+    public List<string> GetCollectedItems()
+    {
+        return new List<string>(_collectedItems);
     }
 }
