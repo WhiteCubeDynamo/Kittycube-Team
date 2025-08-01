@@ -235,7 +235,12 @@ public class DialogueUIController : MonoBehaviour
         dialogueRoot.style.display = DisplayStyle.None;
     }
 
-    public void ShowInteractionPrompt(Vector3 worldPosition, string key = "E")
+    /// <summary>
+    /// Shows a world-space prompt for interaction.
+    /// </summary>
+    /// <param name="worldPosition">The world position to anchor the prompt to.</param>
+    /// <param name="text">The text to display in the prompt (e.g., "[E] Use Panel").</param>
+    public void ShowInteractionPrompt(Vector3 worldPosition, string text)
     {
         if (interactionPrompt == null || hudDocument == null)
         {
@@ -245,7 +250,7 @@ public class DialogueUIController : MonoBehaviour
         
         interactionPrompt.style.display = DisplayStyle.Flex;
         if (interactionKey != null)
-            interactionKey.text = key;
+            interactionKey.text = text;
         
         // Position prompt in screen space with null checks
         try
@@ -539,4 +544,3 @@ private IEnumerator TypewriterEffect(string text)
         HideDialogue();
     }
 }
-
