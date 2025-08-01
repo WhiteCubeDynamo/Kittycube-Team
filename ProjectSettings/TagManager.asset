@@ -3,10 +3,14 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
+<<<<<<< HEAD
   tags:
   - StealableItem
   - Enemy
   - Ground
+=======
+  tags: []
+>>>>>>> 60_Second_Reset
   layers:
   - Default
   - TransparentFX
@@ -14,10 +18,17 @@ TagManager:
   - 
   - Water
   - UI
+<<<<<<< HEAD
   - Player
   - Obstacle
   - 
   - 
+=======
+  - 
+  - 
+  - Player
+  - clone
+>>>>>>> 60_Second_Reset
   - 
   - 
   - 
