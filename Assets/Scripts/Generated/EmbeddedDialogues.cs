@@ -9,9 +9,9 @@ namespace DialogueSystem
 {
     public static class EmbeddedDialogues
     {
-        public const string MuseumEntrance = "title: \"Museum Entrance\"\nlines:\n  - id: \"start\"\n    speaker: \"Guard\"\n    text: \"Stop! The museum is closed. What are you doing here?\"\n    \n  - speaker: \"Narrator\"\n    text: \"You need to choose how to respond to the guard.\"\n    choices_from_story_manager: true\n    story_location: \"MuseumEntrance\"\n    \n  - id: \"sneak_success\"\n    speaker: \"Narrator\"\n    text: \"You successfully sneak past the guard into the museum.\"\n    trigger: \"enter_museum\"\n    \n  - id: \"caught\"\n    speaker: \"Guard\"\n    text: \"Nice try! You're coming with me.\"\n    trigger: \"game_over\"\n";
+        public const string MuseumEntrance = "title: \"Museum Entrance\"\r\nlines:\r\n  - id: \"start\"\r\n    speaker: \"Guard\"\r\n    text: \"Stop! The museum is closed. What are you doing here?\"\r\n    \r\n  - speaker: \"Narrator\"\r\n    text: \"You need to choose how to respond to the guard.\"\r\n    choices_from_story_manager: true\r\n    story_location: \"MuseumEntrance\"\r\n    \r\n  - id: \"sneak_success\"\r\n    speaker: \"Narrator\"\r\n    text: \"You successfully sneak past the guard into the museum.\"\r\n    trigger: \"enter_museum\"\r\n    \r\n  - id: \"caught\"\r\n    speaker: \"Guard\"\r\n    text: \"Nice try! You're coming with me.\"\r\n    trigger: \"game_over\"\r\n";
 
-        public const string TestDialogue = "title: \"Test Dialogue\"\nlines:\n  - id: \"start\"\n    speaker: \"Guard\"\n    text: \"Hey, you're not supposed to be here!\"\n    \n  - speaker: \"Player\"\n    text: \"I was just leaving leaves...\"\n    trigger: \"start_stealth_mode\"\n";
+        public const string TestDialogue = "title: \"Test Dialogue\"\r\nlines:\r\n  - id: \"start\"\r\n    speaker: \"Guard\"\r\n    text: \"Hey, you're not supposed to be here!\"\r\n    \r\n  - speaker: \"Player\"\r\n    text: \"I was just leaving leaves...\"\r\n    trigger: \"start_stealth_mode\"\r\n";
 
         private static readonly Dictionary<string, string> _dialogues = new Dictionary<string, string>
         {
