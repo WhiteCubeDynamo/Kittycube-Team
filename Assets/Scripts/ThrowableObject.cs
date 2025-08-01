@@ -1,5 +1,5 @@
 using UnityEngine;
-using StealthHeist.Enemies;
+// using StealthHeist.Enemies;
 
 namespace StealthHeist.Environment
 {
@@ -48,10 +48,10 @@ namespace StealthHeist.Environment
             foreach (var col in collidersInArea)
             {
                 // If a collider belongs to an enemy, tell them to investigate.
-                if (col.TryGetComponent<BaseEnemy>(out var enemy))
-                {
-                    enemy.HearNoise(transform.position);
-                }
+                // if (col.TryGetComponent<BaseEnemy>(out var enemy))
+                // {
+                //     enemy.HearNoise(transform.position);
+                // }
             }
         }
     }

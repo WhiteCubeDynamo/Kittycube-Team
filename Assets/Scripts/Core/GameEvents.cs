@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using StealthHeist.Inventory;
 
 namespace StealthHeist.Core
 {
@@ -18,12 +17,6 @@ namespace StealthHeist.Core
         // Event triggered when the player is caught by a guard.
         public static event Action OnPlayerCaught;
 
-        // Event triggered when an item is added to the inventory.
-        public static event Action<InventoryItem> OnItemAddedToInventory;
-
-        // Event triggered when an item is removed from the inventory.
-        public static event Action<string, int> OnItemRemovedFromInventory;
-
         public static void TriggerSecurityAlert(Vector3 location)
         {
             OnSecurityAlert?.Invoke(location);
@@ -34,14 +27,5 @@ namespace StealthHeist.Core
             OnPlayerCaught?.Invoke();
         }
 
-        public static void TriggerItemAdded(InventoryItem item)
-        {
-            OnItemAddedToInventory?.Invoke(item);
-        }
-
-        public static void TriggerItemRemoved(string itemName, int quantity)
-        {
-            OnItemRemovedFromInventory?.Invoke(itemName, quantity);
-        }
     }
 }

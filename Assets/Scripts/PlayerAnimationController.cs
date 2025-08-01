@@ -23,7 +23,6 @@ namespace StealthHeist.Player
         // Component References
         [SerializeField] private Animator _animator;
         private Rigidbody _rigidbody;
-        private PlayerController _playerController;
 
         // Animation state tracking
         private float _currentSpeed;
@@ -44,7 +43,6 @@ namespace StealthHeist.Player
         {
             if (_animator == null) _animator = GetComponentInChildren<Animator>();
             _rigidbody = GetComponent<Rigidbody>();
-            _playerController = GetComponent<PlayerController>();
 
             // Cache animator parameter hashes for better performance
             _speedHash = Animator.StringToHash(_speedParameterName);

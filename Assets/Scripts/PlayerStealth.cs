@@ -1,6 +1,5 @@
 using UnityEngine;
 using StealthHeist.Core.Enums;
-using StealthHeist.Core.Interfaces;
 
 namespace StealthHeist.Player
 {
@@ -11,7 +10,7 @@ namespace StealthHeist.Player
     /// like moving, running, and crouching.
     /// </summary>
     [RequireComponent(typeof(Rigidbody))]
-    public class PlayerStealth : MonoBehaviour, IDetectable
+    public class PlayerStealth : MonoBehaviour
     {
         [Header("Stealth Attributes")]
         [SerializeField] private float _walkingNoiseLevel = 0.4f;
@@ -25,7 +24,7 @@ namespace StealthHeist.Player
         // --- Private Fields ---
         private Rigidbody _rigidbody;
         private bool _isCrouching = false; // This should be controlled by a player input script
-
+/*
         #region IDetectable Implementation
 
         public Vector3 Position => transform.position;
@@ -50,7 +49,9 @@ namespace StealthHeist.Player
             // You could alert nearby guards directly from here if needed.
         }
 
-        #endregion
+        #endregion*/
+        public float NoiseLevel=0f;
+        public float VisibilityLevel=0f;
 
         private void Awake()
         {

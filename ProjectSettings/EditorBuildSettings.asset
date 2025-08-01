@@ -8,9 +8,15 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scripts/Dialogue/Examples/DialogueExample.unity
     guid: 8a12397392dccb7efb3960b0fae59721
+  - enabled: 1
+    path: Assets/Scenes/StealthHeistScene 2.unity
+    guid: d4a9f5aa48109ca3fac3efc9eb915c07
+  - enabled: 1
+    path: Assets/Scenes/AsyncDynamics2.unity
+    guid: 52d16ef0d7148d7828a9883309e4961e
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 83f3640ef16d8338c9cbb6151f7e68bd, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

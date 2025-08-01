@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using StealthHeist.Player;
-using StealthHeist.Core.Interfaces;
 
 [RequireComponent(typeof(Rigidbody), typeof(PlayerStealth))]
 public class PhysicalPlayerController : MonoBehaviour
@@ -27,8 +26,11 @@ public class PhysicalPlayerController : MonoBehaviour
     [SerializeField] private float _throwCooldown = 0.5f;
     
     [Header("Interaction")]
-    [SerializeField] private List<string> _collectibleObjectNames = new List<string> { "Jewel", "Diamond", "Gold", "Artifact" };
-    [SerializeField] private List<string> _collectedItems = new List<string>();
+    public Transform collectedItem;
+    public Transform hand;
+    private int itemsStolen;
+    public float interactRange = 2f;
+    [SerializeField] private LayerMask itemMask;
     
     [Header("Physics")]
     public float gravityScale = 2f;
@@ -46,6 +48,8 @@ public class PhysicalPlayerController : MonoBehaviour
     // Public properties for animation controller
     public bool IsCrouching => _isCrouching;
     public bool IsRunning => _isRunning;
+
+    [SerializeField] private GameLoopManager gameLoopManager;
 
     void Awake()
     {
@@ -210,47 +214,113 @@ public class PhysicalPlayerController : MonoBehaviour
 
     private void TryInteract()
     {
-        float interactRange = 2f;
-        Vector3 origin = transform.position + Vector3.up * 0.5f;
-        Vector3 direction = transform.forward;
+        // If already carrying an item, don't try to pick up another
+        if (collectedItem != null)
+        {
+            Debug.Log("Already carrying an item");
+            return;
+        }
 
-        if (Physics.Raycast(origin, direction, out RaycastHit hit, interactRange))
+        Vector3 origin = transform.position + Vector3.up * 0.5f; // Start from chest height
+        Vector3 direction = transform.forward; // Use player's forward direction
+        
+        Debug.Log($"Trying spherecast from {origin} in direction {direction} with range {interactRange}");
+        
+        // Try pickup item using spherecast
+        if (Physics.SphereCast(origin, 0.3f, direction, out RaycastHit hit, interactRange, itemMask))
         {
             GameObject hitObject = hit.collider.gameObject;
+            Debug.Log($"SphereCast hit: {hitObject.name} at distance {hit.distance}");
             
             // Check if this object matches any of our collectible names
-            foreach (string collectibleName in _collectibleObjectNames)
+            foreach (string collectibleName in gameLoopManager.StealableItems)
             {
+                Debug.Log($"Checking {hitObject.name} against {collectibleName}");
                 if (hitObject.name.Contains(collectibleName))
                 {
                     // Add to collected items list
-                    _collectedItems.Add(hitObject.name);
-                    Debug.Log($"Collected: {hitObject.name}. Total items: {_collectedItems.Count}");
-                    
-                    // Remove the object from the scene
-                    Destroy(hitObject);
+                    AttachItem(hitObject);
+                    Debug.Log($"Collected: {hitObject.name}. Total items: {itemsStolen}");
                     return;
                 }
             }
-            
-            // If no collectible was found, still try the interface approach as fallback
-            var interactable = hit.collider.GetComponent<IInteractable>();
-            if (interactable != null)
+        }
+        else
+        {
+            Debug.Log("SphereCast hit nothing");
+        }
+        
+        // Alternative: try simple overlap sphere as backup
+        Collider[] colliders = Physics.OverlapSphere(origin, interactRange, itemMask);
+        if (colliders.Length > 0)
+        {
+            Debug.Log($"OverlapSphere found {colliders.Length} colliders");
+            foreach (Collider col in colliders)
             {
-                interactable.Interact();
+                foreach (string collectibleName in gameLoopManager.StealableItems)
+                {
+                    if (col.gameObject.name.Contains(collectibleName))
+                    {
+                        AttachItem(col.gameObject);
+                        Debug.Log($"Collected via OverlapSphere: {col.gameObject.name}");
+                        return;
+                    }
+                }
             }
+        }
+        
+        // Now interactables process input on their own
+    }
+    // When player picks up item
+    public void AttachItem(GameObject item)
+    {
+        if(collectedItem == null) {
+            collectedItem = item.transform;
+            collectedItem.parent = hand;
+            collectedItem.localPosition = Vector3.zero;
+            collectedItem.localRotation = Quaternion.identity;
+            
+            // Disable the item's physics while carried
+            Rigidbody itemRb = item.GetComponent<Rigidbody>();
+            if (itemRb != null)
+            {
+                itemRb.isKinematic = true;
+            }
+            
+            Debug.Log($"Successfully attached {item.name} to hand");
+        } else {
+            Debug.Log("Already carrying an item");
+        }
+    }
+
+    public void DetachItem()
+    {
+        if(collectedItem != null) {
+            // Re-enable physics
+            Rigidbody itemRb = collectedItem.GetComponent<Rigidbody>();
+            if (itemRb != null)
+            {
+                itemRb.isKinematic = false;
+            }
+            
+            collectedItem.parent = null;
+            itemsStolen++;
+            collectedItem = null;
+            Debug.Log($"Detached item. Total stolen: {itemsStolen}");
+        } else {
+            Debug.Log("No item to drop");
         }
     }
     
     // Public method to check if player has a specific item
     public bool HasItem(string itemName)
     {
-        return _collectedItems.Contains(itemName);
+        return collectedItem != null && collectedItem.name.Contains(itemName);
     }
     
     // Public method to get all collected items
     public List<string> GetCollectedItems()
     {
-        return new List<string>(_collectedItems);
+        return new List<string>(gameLoopManager.CollectedItems);
     }
 }
