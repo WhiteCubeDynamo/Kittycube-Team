@@ -80,12 +80,27 @@ namespace StealthHeist.Environment
         {
             // In a full game, the player might be registered with a manager.
             // For now, we find the object with the IDetectable interface.
-            _player = (IDetectable)FindFirstObjectByType(typeof(IDetectable), FindObjectsInactive.Include);
+            FindPlayerWithIDetectable();
 
             if (_cameraPivot == null)
                 _cameraPivot = transform;
 
             _initialRotation = _cameraPivot.rotation;
+        }
+
+        private void FindPlayerWithIDetectable()
+        {
+            // Since we can't use FindFirstObjectByType with interfaces,
+            // we need to find objects that implement IDetectable
+            MonoBehaviour[] allObjects = FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None);
+            foreach (MonoBehaviour obj in allObjects)
+            {
+                if (obj is IDetectable detectable)
+                {
+                    _player = detectable;
+                    break;
+                }
+            }
         }
 
         private void Update()

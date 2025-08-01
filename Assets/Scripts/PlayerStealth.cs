@@ -10,7 +10,7 @@ namespace StealthHeist.Player
     /// and calculating their current noise and visibility levels based on actions
     /// like moving, running, and crouching.
     /// </summary>
-    [RequireComponent(typeof(CharacterController))]
+    [RequireComponent(typeof(Rigidbody))]
     public class PlayerStealth : MonoBehaviour, IDetectable
     {
         [Header("Stealth Attributes")]
@@ -23,7 +23,7 @@ namespace StealthHeist.Player
         [SerializeField] private float _runningSpeedThreshold = 3.5f;
 
         // --- Private Fields ---
-        private CharacterController _characterController;
+        private Rigidbody _rigidbody;
         private bool _isCrouching = false; // This should be controlled by a player input script
 
         #region IDetectable Implementation
@@ -54,7 +54,7 @@ namespace StealthHeist.Player
 
         private void Awake()
         {
-            _characterController = GetComponent<CharacterController>();
+            _rigidbody = GetComponent<Rigidbody>();
         }
 
         private void Update()
@@ -65,7 +65,7 @@ namespace StealthHeist.Player
         private void CalculateStealthLevels()
         {
             // Calculate Noise Level based on movement
-            float horizontalSpeed = new Vector3(_characterController.velocity.x, 0, _characterController.velocity.z).magnitude;
+            float horizontalSpeed = new Vector3(_rigidbody.linearVelocity.x, 0, _rigidbody.linearVelocity.z).magnitude;
 
             if (horizontalSpeed > _runningSpeedThreshold) // Running
             {
