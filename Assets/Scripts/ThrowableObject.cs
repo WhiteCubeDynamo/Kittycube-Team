@@ -29,7 +29,7 @@ namespace StealthHeist.Environment
             if (_hasLanded) return;
 
             // A small velocity check to prevent triggering noise when just being placed.
-            if (_rb.velocity.magnitude < 1f) return;
+            if (_rb.linearVelocity.magnitude < 1f) return;
 
             _hasLanded = true;
             MakeNoise();
