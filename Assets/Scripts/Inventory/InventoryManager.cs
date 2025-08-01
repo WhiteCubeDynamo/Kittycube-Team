@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 using StealthHeist.Core.Interfaces;
+using StealthHeist.Core;
 using StealthHeist.Core.Enums;
 
 namespace StealthHeist.Inventory
@@ -18,7 +19,7 @@ namespace StealthHeist.Inventory
         public event Action<InventoryItem> OnItemAdded;
         public event Action<InventoryItem> OnItemRemoved;
         public event Action<float, float> OnWeightChanged;
-        public event Action<int, int> OnValueChanged;
+        public event Action<int> OnValueChanged;
         
         private List<InventoryItem> items = new List<InventoryItem>();
         private VisualElement rootElement;
@@ -26,16 +27,27 @@ namespace StealthHeist.Inventory
         private Label weightLabel;
         private Label valueLabel;
         private Label slotsLabel;
+
+        private float _currentWeight;
+        private int _currentValue;
         
+        public static InventoryManager Instance { get; private set; }
         public List<InventoryItem> Items => items;
-        public float CurrentWeight => items.Sum(item => item.GetTotalWeight());
-        public int CurrentValue => items.Sum(item => item.GetTotalValue());
+        public float CurrentWeight => _currentWeight;
+        public int CurrentValue => _currentValue;
         public int UsedSlots => items.Count;
         public bool IsFull => UsedSlots >= maxSlots;
         public bool IsOverweight => CurrentWeight > maxWeight;
         
         private void Awake()
         {
+            if (Instance != null && Instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+            Instance = this;
+
             if (inventoryUI != null)
             {
                 rootElement = inventoryUI.rootVisualElement;
@@ -73,12 +85,10 @@ namespace StealthHeist.Inventory
             {
                 var newItem = new InventoryItem(stealable);
                 items.Add(newItem);
+                GameEvents.TriggerItemAdded(newItem);
                 OnItemAdded?.Invoke(newItem);
             }
-            
-            OnWeightChanged?.Invoke(CurrentWeight, maxWeight);
-            OnValueChanged?.Invoke(CurrentValue, 0);
-            UpdateUI();
+            NotifyInventoryChanged();
             
             return true;
         }
@@ -93,12 +103,10 @@ namespace StealthHeist.Inventory
             if (!itemStillExists)
             {
                 items.Remove(item);
+                GameEvents.TriggerItemRemoved(item.name, item.quantity);
                 OnItemRemoved?.Invoke(item);
             }
-            
-            OnWeightChanged?.Invoke(CurrentWeight, maxWeight);
-            OnValueChanged?.Invoke(CurrentValue, 0);
-            UpdateUI();
+            NotifyInventoryChanged();
             
             return true;
         }
@@ -117,8 +125,16 @@ namespace StealthHeist.Inventory
         public void ClearInventory()
         {
             items.Clear();
-            OnWeightChanged?.Invoke(0f, maxWeight);
-            OnValueChanged?.Invoke(0, 0);
+            NotifyInventoryChanged();
+        }
+
+        private void NotifyInventoryChanged()
+        {
+            _currentWeight = items.Sum(item => item.GetTotalWeight());
+            _currentValue = items.Sum(item => item.GetTotalValue());
+
+            OnWeightChanged?.Invoke(_currentWeight, maxWeight);
+            OnValueChanged?.Invoke(_currentValue);
             UpdateUI();
         }
         

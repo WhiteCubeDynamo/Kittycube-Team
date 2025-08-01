@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.AI;
+using StealthHeist.Core;
 using StealthHeist.Core.Enums;
 using StealthHeist.Core.Interfaces;
 
@@ -134,6 +135,7 @@ namespace StealthHeist.Enemies
             if (detectionLevel >= 1f && currentState != EnemyState.Chasing)
             {
                 OnPlayerDetected?.Invoke();
+                GameEvents.TriggerPlayerCaught();
                 ChangeState(EnemyState.Chasing);
             }
             else if (detectionLevel >= 0.5f && currentState == EnemyState.Patrolling)
@@ -155,6 +157,21 @@ namespace StealthHeist.Enemies
         public void SetPlayerTarget(IDetectable target)
         {
             playerTarget = target;
+        }
+        
+        /// <summary>
+        /// Makes the enemy react to a noise from a specific location.
+        /// Can be called by external objects like thrown items.
+        /// </summary>
+        /// <param name="noiseLocation">The world position of the noise.</param>
+        public virtual void HearNoise(Vector3 noiseLocation)
+        {
+            // Only react if not already in a high-alert state.
+            if (currentState == EnemyState.Patrolling || currentState == EnemyState.Returning)
+            {
+                lastKnownPlayerPosition = noiseLocation;
+                ChangeState(EnemyState.Investigating);
+            }
         }
         
         protected virtual void OnDrawGizmosSelected()

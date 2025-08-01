@@ -1,0 +1,118 @@
+/////////////// Destrier Studios 7/31/25 ///////////////
+
+Player Character:
+
+- A complete first-person controller (PlayerController.cs) that handles movement, looking, running, and crouching using Unity's new Input System.
+
+- A stealth system (PlayerStealth.cs) that calculates the player's visibility and noise levels, making them IDetectable by enemies.
+
+- An interaction system (PlayerInteraction.cs) that allows the player to engage with objects in the world that implement the IInteractable interface.
+
+- The ability to throw objects (ThrowableObject.cs) to create noise distractions for guards.
+
+- Enemy AI & Detection:
+
+- A flexible base for enemies (BaseEnemy.cs) with a state machine for patrolling, investigating, chasing, and searching.
+
+- A specific MuseumGuard.cs implementation that uses a NavMeshAgent to navigate the environment.
+
+- A SecurityCamera.cs that can pan, detect the player, and alert nearby guards.
+
+Interactive Environment:
+
+- StealableObject.cs for items that can be picked up and added to the inventory.
+
+- DoorController.cs for doors that can be opened, closed, and locked, potentially requiring a key from the inventory.
+
+- SecurityPanel.cs that can be used to temporarily or permanently disable security cameras.
+
+Core Game Systems:
+
+- A central GameLoopManager.cs that manages a one-minute timer, win/loss conditions, and restarting the loop.
+
+- A persistence system using the IPersistent interface, allowing changes like disabling a camera to carry over between loops.
+
+- A decoupled GameEvents.cs class to handle global communication between systems (e.g., security alerts, player caught events).
+
+- A full-featured InventoryManager.cs to track stolen items, weight, and value.
+
+Implementation Guide
+
+Here is a step-by-step guide to assemble all these components in the Unity Editor and create a playable scene.
+
+1. Project Setup
+
+Layers: Go to Edit > Project Settings > Tags and Layers. Create the following layers:
+
+Player: For the player character.
+
+Obstacle: For walls, furniture, and other objects that block vision.
+
+Interactable: For all objects the player can interact with (doors, panels, items).
+
+Tags: Ensure you have a Player tag and assign it to your player GameObject.
+
+Input Actions: Set up your Input Actions asset (e.g., "PlayerControls") with the following actions as detailed in previous responses: Move, Look, Jump, 
+Run, Crouch, Throw, and Interact.
+
+Build Settings: Go to File > Build Settings. Add your main game scene and a new, empty scene named "WinScreen" to the Scenes In Build.
+
+2. Manager Objects
+
+In your main scene, create empty GameObjects for your singleton managers. They will persist across loops.
+
+GameLoopManager: Attach GameLoopManager.cs. Configure the scene names and (optionally) link UI Text elements for the timer and status messages.
+
+InventoryManager: Attach InventoryManager.cs. Link your inventory UIDocument.
+
+DialogueManager & Others: Ensure your DialogueManager, TriggerManager, etc., are also present in the scene.
+
+3. Player Prefab
+
+Create a player GameObject. Assign it the Player tag and Player layer.
+
+Add a CharacterController component.
+
+Add the PlayerController.cs, PlayerStealth.cs, and PlayerInteraction.cs scripts.
+
+Add a Player Input component and assign your Input Actions asset to it.
+
+Create a Camera as a child of the player object and drag it to the Player Camera slot in PlayerController and PlayerInteraction.
+
+Configure the Interaction Layer on PlayerInteraction to be the Interactable layer you created.
+
+4. Enemy Prefab (MuseumGuard)
+
+Create a guard GameObject.
+
+Add a NavMeshAgent component.
+
+Add the MuseumGuard.cs script.
+
+In the Inspector, set the Player Layer and Obstacle Layer for detection.
+
+Create empty GameObjects in your scene to act as patrol points and assign them to the Patrol Points array on the guard.
+
+5. Environment Objects (Create Prefabs for these)
+
+Security Camera: On a camera model, add SecurityCamera.cs. Assign a unique Persistence ID. Set the Player and Obstacle layers.
+
+Security Panel: On a panel model, add SecurityPanel.cs and a Collider. Set its layer to Interactable. Drag the SecurityCamera objects it controls into the 
+cameras To Control array.
+
+Door: Create a parent pivot object with a child mesh. On the parent, add DoorController.cs and a Collider. Set its layer to Interactable. Drag the child mesh to the Door Pivot slot.
+
+Stealable Item: On an item model, add StealableObject.cs and a Collider. Set its layer to Interactable. Configure its name, value, weight, etc.
+
+Throwable Item: On a small object model (like a rock), add ThrowableObject.cs and a Rigidbody. Create a prefab from this and assign it to the Throwable 
+Prefab slot on your PlayerController.
+
+6. Scene Setup
+
+NavMesh: Open the Window > AI > Navigation window. Go to the Bake tab and click Bake to generate the navigation mesh that your guards will use to walk around.
+
+Escape Zone: Create an empty GameObject with a Collider set to Is Trigger. Add the EscapeZone.cs script. Place it at the level's exit.
+
+////////////////////////////////////////////////////////
+
+//////////////

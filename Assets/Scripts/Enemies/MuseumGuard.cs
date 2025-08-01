@@ -200,5 +200,19 @@ namespace StealthHeist.Enemies
                 ChangeState(EnemyState.Patrolling);
             }
         }
+
+        /// <summary>
+        /// Called by external systems (like a SecurityCamera) to alert the guard.
+        /// </summary>
+        /// <param name="alarmPosition">The position the guard should investigate.</param>
+        public void RespondToAlarm(Vector3 alarmPosition)
+        {
+            // A guard will only respond if they are in a non-alerted state.
+            if (currentState == EnemyState.Patrolling || currentState == EnemyState.Returning)
+            {
+                lastKnownPlayerPosition = alarmPosition;
+                ChangeState(EnemyState.Investigating);
+            }
+        }
     }
 }
