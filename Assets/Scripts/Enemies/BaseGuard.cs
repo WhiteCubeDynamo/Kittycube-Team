@@ -40,6 +40,11 @@ namespace StealthHeist.Enemies
         public Color waypointColor = Color.yellow;
         public Color pathColor = Color.green;
         
+        [Header("Vision Cone Settings")]
+        public Material visionConeMaterial;
+        public Color normalVisionColor = new Color(1f, 1f, 0f, 0.2f);
+        public Color detectedVisionColor = new Color(1f, 0f, 0f, 0.4f);
+
         // Private fields
         private int currentWaypointIndex = 0;
         private bool isReversing = false;
@@ -59,6 +64,16 @@ namespace StealthHeist.Enemies
         {
             navAgent = GetComponent<NavMeshAgent>();
             originalPosition = transform.position;
+
+            // Add and configure the FieldOfView component
+            FieldOfView fov = gameObject.AddComponent<FieldOfView>();
+            fov.viewRadius = detectionRadius;
+            fov.viewAngle = fieldOfViewAngle;
+            fov.targetMask = LayerMask.GetMask("Player"); // Assuming player is on "Player" layer
+            fov.obstacleMask = obstacleLayer;
+            fov.viewMaterial = visionConeMaterial;
+            fov.normalColor = normalVisionColor;
+            fov.detectedColor = detectedVisionColor;
             
             // Find closest waypoint as starting point if waypoints exist
             if (waypoints.Count > 0)
