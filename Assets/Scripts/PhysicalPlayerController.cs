@@ -14,6 +14,7 @@ public class PhysicalPlayerController : MonoBehaviour
     public float maxSpeed = 10f;
     public float friction = 10f;
     public AnimationCurve accelerationCurve = AnimationCurve.Linear(0, 1, 1, 0);
+    public bool canJump = false;
     
     [Header("Ground Detection")]
     public Transform groundCheck;
@@ -91,7 +92,8 @@ public class PhysicalPlayerController : MonoBehaviour
     
     void Update()
     {
-        ProcessJump();
+        if(canJump)
+            ProcessJump();
     }
     
     private void ProcessJump()

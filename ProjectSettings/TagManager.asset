@@ -7,6 +7,7 @@ TagManager:
   - StealableItem
   - Enemy
   - Ground
+  - Throwable
   layers:
   - Default
   - TransparentFX
