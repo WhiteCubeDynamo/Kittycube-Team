@@ -8,7 +8,7 @@ public class CameraPOV : MonoBehaviour
     void Start()
     {
         // Set the camera to look straight down
-        transform.rotation = Quaternion.Euler(90, 0, 0);
+        // transform.rotation = Quaternion.Euler(90, 0, 0);
     }
 
     void LateUpdate()
