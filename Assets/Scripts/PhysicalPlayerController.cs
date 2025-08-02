@@ -416,6 +416,7 @@ private void TryInteract()
 
     public void DetachItem()
     {
+        TryThrowObject();
         if (collectedItem != null) {
             Debug.Log($"Detaching item {collectedItem.name}");
             Debug.Assert(!rb.isKinematic, "Player should never be kinematic at detach");
