@@ -116,3 +116,6 @@ Escape Zone: Create an empty GameObject with a Collider set to Is Trigger. Add t
 ////////////////////////////////////////////////////////
 
 //////////////
+
+
+By 2025.8.2 we have topdown controls, playable something level, capsule guards, too huge treasures.
