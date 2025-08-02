@@ -61,11 +61,8 @@ public class GameLoopManager : MonoBehaviour
         CollectedItems = new List<string>();
         
         // Store initial player position
-        if (player != null)
-        {
-            playerStartPosition = player.transform.position;
-            playerStartRotation = player.transform.rotation;
-        }
+        playerStartPosition = player.transform.position;
+        playerStartRotation = player.transform.rotation;
         
         // Get scene name for reloading items
         // Async loading setup
