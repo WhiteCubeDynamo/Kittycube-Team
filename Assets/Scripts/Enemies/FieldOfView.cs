@@ -1,4 +1,6 @@
-
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
 
 public class FieldOfView : MonoBehaviour
@@ -31,8 +33,11 @@ public class FieldOfView : MonoBehaviour
         
         _viewMesh = new Mesh { name = "Vision Cone" };
         _viewMeshFilter.mesh = _viewMesh;
-        _viewMeshRenderer.material = viewMaterial;
-        _viewMeshRenderer.material.color = normalColor;
+        if (viewMaterial != null)
+        {
+            _viewMeshRenderer.material = viewMaterial;
+            _viewMeshRenderer.material.color = normalColor;
+        }
     }
 
     void LateUpdate()
@@ -108,7 +113,10 @@ public class FieldOfView : MonoBehaviour
         }
 
         // Update the material color based on detection status
-        _viewMeshRenderer.material.color = _playerDetected ? detectedColor : normalColor;
+        if (viewMaterial != null)
+        {
+            _viewMeshRenderer.material.color = _playerDetected ? detectedColor : normalColor;
+        }
     }
 
     // Helper to get direction from an angle
@@ -125,15 +133,17 @@ public class FieldOfView : MonoBehaviour
     // Draw gizmos in the editor for easier setup
     void OnDrawGizmos()
     {
+        if (UnityEditor.Selection.activeGameObject != gameObject) return;
+
         Gizmos.color = _playerDetected ? detectedColor : normalColor;
-        UnityEditor.Handles.color = Gizmos.color;
+        Handles.color = Gizmos.color;
 
         // Draw the view angle lines
         Vector3 viewAngleA = DirFromAngle(-viewAngle / 2, false);
         Vector3 viewAngleB = DirFromAngle(viewAngle / 2, false);
-        UnityEditor.Handles.DrawWireArc(transform.position, Vector3.up, viewAngleA, viewAngle, viewRadius);
-        UnityEditor.Handles.DrawLine(transform.position, transform.position + viewAngleA * viewRadius);
-        UnityEditor.Handles.DrawLine(transform.position, transform.position + viewAngleB * viewRadius);
+        Handles.DrawWireArc(transform.position, Vector3.up, viewAngleA, viewAngle, viewRadius);
+        Handles.DrawLine(transform.position, transform.position + viewAngleA * viewRadius);
+        Handles.DrawLine(transform.position, transform.position + viewAngleB * viewRadius);
         
         // Draw a line to any detected player
         if (_playerDetected)
