@@ -116,14 +116,8 @@ public class PhysicalPlayerController : MonoBehaviour
         bool runningPressed = inputActions.Player.Run.IsPressed();
         _isRunning = runningPressed;
 
-        Vector3 forward = cameraTransform.forward;
-        forward.y = 0;
-        forward.Normalize();
-        Vector3 right = cameraTransform.right;
-        right.y = 0;
-        right.Normalize();
-
-        Vector3 moveDir = forward * input.y + right * input.x;
+        // Use world-space directions for top-down movement, independent of camera rotation.
+        Vector3 moveDir = new Vector3(input.x, 0f, input.y);
 
         float speed = _isCrouching ? crouchSpeed : (runningPressed ? moveSpeed * 1.5f : moveSpeed);
 
