@@ -48,7 +48,7 @@ namespace StealthHeist.Enemies
         // Private fields
         private int currentWaypointIndex = 0;
         private bool isReversing = false;
-        private float waypointWaitTimer = 0f;
+        private float waypointWaitTimer = 3f;
         private Vector3 originalPosition;
         private int originalWaypointIndex;
 
