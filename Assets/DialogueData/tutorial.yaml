@@ -1,0 +1,7 @@
+title: "Test Dialogue"
+lines:
+
+  - speaker: "Thief"
+    text: "Hi. I am me. I mean, you are controlling me."
+  - speaker: "Thief"
+    text: "Use WASD for move. Shift run. C crouch. E take item. Q throw."
