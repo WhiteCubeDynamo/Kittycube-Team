@@ -1,7 +1,11 @@
-title: "Test Dialogue"
+title: "Tutorial Dialogue"
 lines:
 
   - speaker: "Thief"
     text: "Hi. I am me. I mean, you are controlling me."
   - speaker: "Thief"
     text: "Use WASD for move. Shift run. C crouch. E take item. Q throw."
+  - speaker: "Thief"
+    text: "Get a dice and deliver it back to start. Then get all others."
+  - speaker: "Thief"
+    text: "Nobody must see us."

@@ -525,7 +525,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2ceeac3957eac454c877dfa423bdc567, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2ceeac3957eac454c877dfa423bdc567, type: 3}
       propertyPath: m_LocalRotation.x
@@ -533,7 +533,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2ceeac3957eac454c877dfa423bdc567, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2ceeac3957eac454c877dfa423bdc567, type: 3}
       propertyPath: m_LocalRotation.z
@@ -545,7 +545,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2ceeac3957eac454c877dfa423bdc567, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 180
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2ceeac3957eac454c877dfa423bdc567, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -554,6 +554,20 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 2ceeac3957eac454c877dfa423bdc567, type: 3}
       propertyPath: m_Name
       value: player
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 2ceeac3957eac454c877dfa423bdc567, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 9706e2e0d5770b6fe857a67fcc92926b, type: 2}
+    - target: {fileID: 5866666021909216657, guid: 2ceeac3957eac454c877dfa423bdc567, type: 3}
+      propertyPath: m_WarningMessage
+      value: "\nBinding warning: Some generic clip(s) animate transforms that are
+        already bound by a Humanoid avatar. These transforms can only be changed
+        by Humanoid clips.\n\tTransform 'spine.002'\n\tTransform 'spine.003'\n\tTransform
+        'spine.001'\n\tTransform 'f_ring.01.L'\n\tTransform 'f_index.02.L'\n\tTransform
+        'f_index.03.R'\n\tTransform 'thumb.01.R'\n\tTransform 'shoulder.L'\n\tTransform
+        'thumb.02.R'\n\tTransform 'spine.002'\n\tand more ...\n\tFrom animation clip
+        'Scene'"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4353,6 +4367,59 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ce49819c64d941944a6da00f816c220c, type: 3}
   m_PrefabInstance: {fileID: 1407610466}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &303546660
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 303546661}
+  - component: {fileID: 303546662}
+  m_Layer: 0
+  m_Name: Tutorial Trigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &303546661
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 303546660}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -24.27, y: -2.27, z: -34.24}
+  m_LocalScale: {x: 5.657045, y: 5.657045, z: 5.657045}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1997139945}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &303546662
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 303546660}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &319930744
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11852,6 +11919,11 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 3542510458516006757, guid: 1ea228efa6dc3b44088fc19469a9657b, type: 3}
+--- !u!95 &965860779 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 2ceeac3957eac454c877dfa423bdc567, type: 3}
+  m_PrefabInstance: {fileID: 20039962}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &973582764
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14709,6 +14781,10 @@ PrefabInstance:
       propertyPath: throwCollisionDelay
       value: 0.01
       objectReference: {fileID: 0}
+    - target: {fileID: 9008447773737240221, guid: 811553b33fbba45bcbe788c552317b96, type: 3}
+      propertyPath: _animator
+      value: 
+      objectReference: {fileID: 965860779}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 3306180213155130691, guid: 811553b33fbba45bcbe788c552317b96, type: 3}
@@ -23055,6 +23131,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 275121023}
+  - {fileID: 303546661}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2000874294
