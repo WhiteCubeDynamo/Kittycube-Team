@@ -15,7 +15,7 @@ namespace DialogueSystem
 
         public const string TestDialogue = "title: \"Test Dialogue\"\nlines:\n  - id: \"start\"\n    speaker: \"Guard\"\n    text: \"Hey, you're not supposed to be here!\"\n    \n  - speaker: \"Player\"\n    text: \"I was just leaving leaves...\"\n    trigger: \"start_stealth_mode\"\n";
 
-        public const string Tutorial = "title: \"Tutorial Dialogue\"\nlines:\n\n  - speaker: \"Thief\"\n    text: \"Hi. I am me. I mean, you are controlling me.\"\n  - speaker: \"Thief\"\n    text: \"Use WASD for move. Shift run. C crouch. E take item. Q throw.\"\n  - speaker: \"Thief\"\n    text: \"Get a dice and deliver it back to start. Then get all others.\"\n  - speaker: \"Thief\"\n    text: \"Nobody must see us.\"\n";
+        public const string Tutorial = "title: \"Tutorial Dialogue\"\nlines:\n\n  - speaker: \"Thief\"\n    text: \"Hi. I am me. I mean, you are controlling me. Press Enter to proceed.\"\n  - speaker: \"Thief\"\n    text: \"Use WASD for move. Shift run. C crouch. E take item. Q throw.\"\n  - speaker: \"Thief\"\n    text: \"Get a dice and deliver it back to start. Then get all others.\"\n  - speaker: \"Thief\"\n    text: \"Nobody must see us.\"\n";
 
         public const string Win = "title: \"Win Dialogue\"\nlines:\n\n  - speaker: \"Thief\"\n    text: \"Finally all artifacts collected!\"\n  - speaker: \"Thief\"\n    text: \"But states where they was stolen was too afraid to accept them back.\"\n  - speaker: \"Thief\"\n    text: \"So I had to keep those dices until they change their mind.\"\n    trigger: \"win_end\"\n";
 

@@ -2,7 +2,7 @@ title: "Tutorial Dialogue"
 lines:
 
   - speaker: "Thief"
-    text: "Hi. I am me. I mean, you are controlling me."
+    text: "Hi. I am me. I mean, you are controlling me. Press Enter to proceed."
   - speaker: "Thief"
     text: "Use WASD for move. Shift run. C crouch. E take item. Q throw."
   - speaker: "Thief"
