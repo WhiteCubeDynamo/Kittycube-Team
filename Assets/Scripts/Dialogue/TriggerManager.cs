@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 /// <summary>
@@ -97,6 +98,12 @@ public class TriggerManager : MonoBehaviour
             // case "unlock_ability":
             //     UnlockPlayerAbility(line.ability_name);
             //     break;
+            case "loose_end":
+                SceneManager.LoadScene(0);
+                break;
+            case "win_end":
+                Application.Quit();
+                break;
                 
             default:
                 Debug.LogWarning($"Unknown trigger: {triggerName}");

@@ -1,0 +1,10 @@
+title: "Win Dialogue"
+lines:
+
+  - speaker: "Thief"
+    text: "Finally all artifacts collected!"
+  - speaker: "Thief"
+    text: "But states where they was stolen was too afraid to accept them back."
+  - speaker: "Thief"
+    text: "So I had to keep those dices until they change their mind."
+    trigger: "win_end"

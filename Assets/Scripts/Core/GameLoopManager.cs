@@ -412,6 +412,7 @@ public class GameLoopManager : MonoBehaviour
     
     private void Win()
     {
+        SceneManager.LoadScene("WinScene");
         gameWon = true;
         Debug.Log($"Victory! Completed in {loopCount} loops!");
         
@@ -453,6 +454,7 @@ public class GameLoopManager : MonoBehaviour
     
     private void GameOver()
     {
+        SceneManager.LoadScene("LossScene");
         gameLost = true;
         Debug.Log($"Game Over! Player was caught {catchCount} times.");
         

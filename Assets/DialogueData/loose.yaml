@@ -1,0 +1,36 @@
+title: "Loose Dialogue"
+lines:
+
+  - speaker: "Guard"
+    text: "Look at this pathetic excuse for a propaganda brainwashed idiot. Thought you could steal from the state's museums and get away with it?"
+
+  - speaker: "Warden"
+    text: "A museum thief pretending to be a hero. How noble. You're nothing but a common criminal hiding behind politics."
+
+  - speaker: "Guard"
+    text: "Silent treatment, eh? Typical coward. Can't even defend your so-called 'cause' now that you're caught."
+
+  - speaker: "Interrogator"
+    text: "You know what's funny? You thought stealing artifacts would somehow help. All you did was give us an excuse to tighten security."
+
+  - speaker: "Guard"
+    text: "The other prisoners laugh at you, you know. Even the real criminals think you're a joke."
+
+  - speaker: "Warden"
+    text: "A thief is a thief, no matter what pretty ideals you dress it up with. You're going to rot here like the petty criminal you are."
+
+  - speaker: "Guard"
+    text: "Still not talking? Good. We prefer our political prisoners broken and silent."
+
+  - speaker: "Interrogator"
+    text: "You thought you were some kind of resistance fighter? You're just a delusional burglar who got caught."
+
+  - speaker: "Guard"
+    text: "Hey everyone, come look at the 'freedom fighter' who fights tyranny by stealing old paintings!"
+
+  - speaker: "Warden"
+    text: "Twenty years, minimum. That's what your 'heroic' museum heist earned you. Hope it was worth it."
+
+  - speaker: "Game"
+    text: "YOU LOOSE!"
+    trigger: "loose_end"
