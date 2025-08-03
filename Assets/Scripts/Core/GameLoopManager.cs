@@ -388,12 +388,12 @@ public class GameLoopManager : MonoBehaviour
             }
         }
         
-        if (!CollectedItems.Contains(itemName))
-        {
+        // if (!CollectedItems.Contains(itemName))
+        // {
             CollectedItems.Add(itemName);
             StealableItems.Remove(itemName);
             Debug.Log($"Successfully stole: {itemName}. Items remaining: {StealableItems.Count}");
-        }
+        // }
         
         // Check if all items have been collected
         if (CollectedItems.Count >= InitialStealableItems.Count)
