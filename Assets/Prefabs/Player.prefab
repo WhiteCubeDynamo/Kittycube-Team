@@ -691,7 +691,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 2848974827163759793}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2415780595883714250}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 0599457c4685c7f7cad2f44fea8af87f, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -818,6 +818,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  canJump: 0
   groundCheck: {fileID: 8117086458223554311}
   groundDistance: 1
   groundMask:
@@ -826,14 +827,14 @@ MonoBehaviour:
   _throwablePrefab: {fileID: 0}
   _throwForce: 15
   _throwCooldown: 1
-  _collectibleObjectNames:
-  - Jewel
-  - Diamond
-  - Gold
-  - Artifact
   collectedItem: {fileID: 0}
-  hand: {fileID: 2620603661540880916}
-  interactRange: 2
+  handStealable: {fileID: 0}
+  handThrowable: {fileID: 0}
+  interactRange: 200
+  itemMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  MaxGrabWeight: 10
   gravityScale: 2
   gameLoopManager: {fileID: 0}
 --- !u!114 &9008447773737240221

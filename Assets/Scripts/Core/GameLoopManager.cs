@@ -23,6 +23,7 @@ public class GameLoopManager : MonoBehaviour
     public float loopTime = 60f; // Loop duration in seconds
     public Vector3 playerStartPosition;
     public Quaternion playerStartRotation;
+    public int maxCatches = 4; // Player loses after this many catches
     
     [Header("Stealable Items")]
     public List<string> StealableItems;
@@ -36,6 +37,7 @@ public class GameLoopManager : MonoBehaviour
     [Header("UI Elements")]
     public Text timeLeftText;
     public Text loopCountText;
+    public Text catchCountText;
     
     [Header("Scene Management")]
     public string itemsSceneName; // Scene containing dynamic items to reload
@@ -47,7 +49,9 @@ public class GameLoopManager : MonoBehaviour
     // Private fields
     private float currentTime;
     private int loopCount = 0;
+    private int catchCount = 0;
     private bool gameWon = false;
+    private bool gameLost = false;
     private List<PlayerPositionRecord> currentLoopRecording = new List<PlayerPositionRecord>();
     private List<List<PlayerPositionRecord>> previousLoopRecordings = new List<List<PlayerPositionRecord>>();
     private List<GameObject> ghostPlayers = new List<GameObject>();
@@ -61,11 +65,8 @@ public class GameLoopManager : MonoBehaviour
         CollectedItems = new List<string>();
         
         // Store initial player position
-        if (player != null)
-        {
-            playerStartPosition = player.transform.position;
-            playerStartRotation = player.transform.rotation;
-        }
+        playerStartPosition = player.transform.position;
+        playerStartRotation = player.transform.rotation;
         
         // Get scene name for reloading items
         // Async loading setup
@@ -272,6 +273,13 @@ public class GameLoopManager : MonoBehaviour
         
         if (player == null) return;
         
+        // Drop any held items BEFORE resetting position/physics
+        if (player.collectedItem != null)
+        {
+            Debug.Log($"Dropping held item during reset: {player.collectedItem.name}");
+            player.DetachItem();
+        }
+        
         // Reset position and rotation
         player.transform.position = playerStartPosition;
         player.transform.rotation = playerStartRotation;
@@ -289,12 +297,6 @@ public class GameLoopManager : MonoBehaviour
         if (playerStealth != null)
         {
             playerStealth.SetCrouching(false);
-        }
-        
-        // Drop any held items
-        if (player.collectedItem != null)
-        {
-            player.DetachItem();
         }
         
         Debug.Log("Player reset to starting position");
@@ -429,16 +431,42 @@ public class GameLoopManager : MonoBehaviour
     // Public method called when player is caught by guard
     public void OnPlayerCaught()
     {
-        Debug.Log("Player was caught by guard! Resetting loop...");
+        Debug.Log("Player was caught by guard! Updating catch count...");
         
-        // Update UI to show caught status
-        if (timeLeftText != null)
+        // Increment the catch count
+        catchCount++;
+        
+        if (catchCountText != null)
         {
-            timeLeftText.text = "CAUGHT!";
+            catchCountText.text = $"Catches: {catchCount}/{maxCatches}";
         }
         
-        // Reset the loop immediately (same as timeout)
+        if (catchCount >= maxCatches)
+        {
+            GameOver();
+            return;
+        }
+        
+        // Reset the loop if limit not reached
         ResetLoop();
+    }
+    
+    private void GameOver()
+    {
+        gameLost = true;
+        Debug.Log($"Game Over! Player was caught {catchCount} times.");
+        
+        // Stop recording
+        if (recordingCoroutine != null)
+        {
+            StopCoroutine(recordingCoroutine);
+        }
+        
+        // Update UI to show game over
+        if (timeLeftText != null)
+        {
+            timeLeftText.text = "GAME OVER!";
+        }
     }
     
     // Public method to get current loop info
